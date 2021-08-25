@@ -1,0 +1,91 @@
+monitor:
+  nacos:
+    connectString: mse-0906d600-nacos-ans.mse.aliyuncs.com:8848
+  http:
+    connectionRequestTimeout: 1000
+    connectionTimeout: 3000
+    socketTimeout: 6000
+    maxTotal: 200
+    defaultMaxPerRoute: 1000
+  client:
+    version: 1.0.0
+    application: vendixxx_monitor
+    applcationDesc: 监控系统
+    nettyPort: 19900
+    token: 0886a1664cbc02284908a103c0a9ea48
+jdbc:
+  connect:
+    url: jdbc:mysql://127.0.0.1:3306/vendixxx_monitor_0?serverTimezone=Hongkong&autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+    userName: root
+    password: 12345678
+
+
+spring:
+  shardingsphere:
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/vendixxx_monitor_0?serverTimezone=Hongkong&autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+        username: root
+        password: 12345678
+        initial-size: 5
+        min-idle: 5
+        max-active: 100
+        max-wait: 60000
+        test-on-borrow: true
+        test-while-idle: true
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        remove-abandoned: true
+        remove-abandoned-timeout: 3000
+        validation-query: select 1
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/vendixxx_monitor_1?serverTimezone=Hongkong&autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+        username: root
+        password: 12345678
+        initial-size: 5
+        min-idle: 5
+        max-active: 100
+        max-wait: 60000
+        test-on-borrow: true
+        test-while-idle: true
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        remove-abandoned: true
+        remove-abandoned-timeout: 3000
+        validation-query: select 1
+    sharding:
+      default-data-source-name: ds0
+      default-database-strategy:
+        none:
+          any:
+      default-table-strategy:
+        none:
+          any:
+      tables:
+        monitor_data_input:
+          actual-data-nodes: ds0.monitor_data_input,ds1.monitor_data_input
+          key-generator:
+            type: SNOWFLAKE
+            column: id
+            props:
+              worker.id: 0
+              max.tolerate.time.difference.milliseconds: 0
+              max.vibration.offset: 1000
+          database-strategy:
+            standard:
+              sharding-column: biz_no
+              precise-algorithm-class-name : com.vendixxx.monitor.admin.sharding.BizNoAlgorithm
+    props:
+      max:
+        connections:
+          size:
+            per:
+              query: 50
+      sql:
+        show:
+          true

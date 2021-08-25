@@ -1,0 +1,26 @@
+# 建议放一些通用的、与环境无关、与系统相关的配置在这里
+# SpringBoot的相关配置
+spring:
+  application:
+    name: vendixxx-monitor-admin
+  profiles:
+    active: test
+  appId: 1
+
+
+# 服务配置
+server:
+  port: 8080
+
+# slf4j日志配置
+logging:
+  config: classpath:logback-spring.xml
+  path: ./logs/vendixxx-monitor-admin/
+  level:
+    root: INFO
+    org:
+      springframework:
+        boot:
+          autoconfigure: ERROR
+
+
